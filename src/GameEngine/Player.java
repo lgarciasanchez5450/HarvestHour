@@ -9,10 +9,10 @@ public class Player extends Living {
     private final static float ONE_OVER_SQRT_TWO = 0.707106781188f;
     public float speed;
     public Player(float x, float y) {
-        super(x, y,.2f,.8f);
+        super(x, y,.8f,.8f);
         currentAnimation = new Animation(ImageLoader.loadFolder("src/Assets/images/player/idle"),1);
-        setAnchorX(0.0f);
-        setAnchorY(0.0f);
+        setAnchorX(.5f);
+        setAnchorY(.5f);
     }
     public void update() {
         velY = KeyInput.getKeyAsInt(KeyEvent.VK_S) - KeyInput.getKeyAsInt(KeyEvent.VK_W);
@@ -24,8 +24,6 @@ public class Player extends Living {
         velX *= speed;
         velY *= speed;
     }
-
-
 
     public String toString() {
         return "Player{pos("+getWorldX() + ", " + getWorldY()+")}";

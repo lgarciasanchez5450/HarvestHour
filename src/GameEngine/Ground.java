@@ -1,11 +1,9 @@
 package GameEngine;
 
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 
 import Assets.images.ImageLoader;
 import GameEngine.Physics.PhysicalGround;
-import GameEngine.Rendering.Renderable;
 
 public class Ground implements PhysicalGround {
     final float frictionK;
@@ -28,7 +26,10 @@ public class Ground implements PhysicalGround {
     public enum Types {
         WATER(new Ground(1,"src/Assets/images/ground/water")),
         GRASS(new Ground(5,"src/Assets/images/ground/grass")),
-        SAND(new Ground(8,"src/Assets/images/ground/sand"));
+        SAND(new Ground(8,"src/Assets/images/ground/sand")),
+        PLANK(new Ground(8,"src/Assets/images/ground/plank")),
+        PLANK_WATER1(new Ground(8,"src/Assets/images/ground/waterplankmerge1")),
+        PLANK_WATER2(new Ground(8,"src/Assets/images/ground/waterplankmerge2"));
         private final Ground g;
         public Ground getGround() {return g;}
         Types(Ground g) {this.g = g;}

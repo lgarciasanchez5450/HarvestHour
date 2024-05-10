@@ -1,7 +1,6 @@
 package GameEngine.Physics;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -96,7 +95,6 @@ public class PhysicsEngine {
         float vel = m.getVelX();
         boolean touched = false;
         if (vel == 0) return false;
-
         for (int[] coordinate : getCoordinatesCovered(m)) {
             if (coordinate[0] < 0 || coordinate[1] < 0) continue;
             Immovable obj = blocks[coordinate[1]][coordinate[0]];

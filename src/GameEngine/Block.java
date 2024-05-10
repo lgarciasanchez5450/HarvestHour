@@ -1,5 +1,7 @@
 package GameEngine;
 
+import static GameEngine.GameConstants.BLOCK_SIZE;
+
 import java.awt.Image;
 
 import Assets.images.ImageLoader;
@@ -13,7 +15,7 @@ public class Block extends Entity implements Immovable {
         super(x, y, width, height);
         offsetX = x%1.0f;
         offsetY = y%1.0f;
-        currentAnimation = new Animation(new Image[] {ImageLoader.load(path)},1);
+        currentAnimation = new Animation(new Image[] {ImageLoader.load(path).getScaledInstance(BLOCK_SIZE,BLOCK_SIZE,0)},1);
     }
     public enum Types {
         TEST(1,1,"blocks/test.png");

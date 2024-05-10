@@ -4,12 +4,10 @@ import static GameEngine.GameConstants.BLOCK_SIZE;
 import static GameEngine.GameConstants.WINDOW_HEIGHT_GAME_COORDS;
 import static GameEngine.GameConstants.WINDOW_WIDTH_GAME_COORDS;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.Map;
 
 import GameEngine.Ground;
 import GameEngine.MapGenerator;
@@ -78,8 +76,8 @@ public class Renderer {
         int pixelCoordY = (int) Math.floor((worldY - camera.getCameraY()) * BLOCK_SIZE);
         int offsetX = (int) ((worldSizeX*BLOCK_SIZE-img.getWidth(null)) * anchorX);
         int offsetY = (int) ((worldSizeY*BLOCK_SIZE-img.getHeight(null)) * anchorY);
-        //g.drawImage(img,pixelCoordX+offsetX + halfWindowWidth,pixelCoordY+offsetY + halfWindowHeight,img.getWidth(null), img.getHeight(null),null);
-        g.drawImage(img,pixelCoordX+offsetX + halfWindowWidth,pixelCoordY+offsetY + halfWindowHeight,(int)(worldSizeX*BLOCK_SIZE), (int)(worldSizeY*BLOCK_SIZE),null);
+        g.drawImage(img,pixelCoordX+offsetX + halfWindowWidth,pixelCoordY+offsetY + halfWindowHeight,img.getWidth(null), img.getHeight(null),null);
+        //g.drawImage(img,pixelCoordX+offsetX + halfWindowWidth,pixelCoordY+offsetY + halfWindowHeight,(int)(worldSizeX*BLOCK_SIZE), (int)(worldSizeY*BLOCK_SIZE),null);
     }
 
 }
