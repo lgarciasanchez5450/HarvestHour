@@ -29,7 +29,8 @@ public class Ground implements PhysicalGround {
         SAND(new Ground(8,"src/Assets/images/ground/sand")),
         PLANK(new Ground(8,"src/Assets/images/ground/plank")),
         PLANK_WATER1(new Ground(8,"src/Assets/images/ground/waterplankmerge1")),
-        PLANK_WATER2(new Ground(8,"src/Assets/images/ground/waterplankmerge2"));
+        PLANK_WATER2(new Ground(8,"src/Assets/images/ground/waterplankmerge2")),
+        TILLED_DIRT(new Ground(8,"src/Assets/images/ground/tilled_dirt"));
         private final Ground g;
         public Ground getGround() {return g;}
         Types(Ground g) {this.g = g;}
