@@ -1,10 +1,15 @@
 package GameEngine.Physics;
 
+import static GameEngine.GameConstants.MAP_SIZE_X;
+import static GameEngine.GameConstants.MAP_SIZE_Y;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 import GameEngine.Ground;
+import lib.Quadtree.Quadtree;
+import lib.Quadtree.Rect;
 import lib.Time;
 
 
@@ -14,6 +19,7 @@ public class PhysicsEngine {
     private final PhysicalGround[][] map;
     private final Immovable[][] blocks;
     private final ArrayList<Movable> entities;
+    private final Quadtree q_nm_entities;
     public PhysicsEngine(PhysicalGround[][] map, Immovable[][] blocks) {
         this.map = map;
         // The map is so big that we don't want to create a copy of it even though it is theoretically the
@@ -22,6 +28,7 @@ public class PhysicsEngine {
         // Because Java sucks and when Sun Microsystems made it, that was possibly the worst decision made by a
         // Company. EVER!
         this.entities = new ArrayList<>();
+        q_nm_entities = new Quadtree(0,0,MAP_SIZE_X,MAP_SIZE_Y);
         this.blocks = blocks;
 
     }
@@ -45,8 +52,8 @@ public class PhysicsEngine {
         }
     }
     public void addMovable(Movable m) {entities.add(m);}
+    public void addImmovableEntity(Physical p) {q_nm_entities.insert(p);}
     public void removeMovable(Movable m) {entities.remove(m);}
-
     /**
      * Attempts to add an immovable block to the world
      * @param im Block Object, must implement Immovable interface
@@ -98,7 +105,7 @@ public class PhysicsEngine {
         for (int[] coordinate : getCoordinatesCovered(m)) {
             if (coordinate[0] < 0 || coordinate[1] < 0) continue;
             Immovable obj = blocks[coordinate[1]][coordinate[0]];
-            if (obj == null) {continue;}
+            if (obj == null || !obj.hasCollision()) {continue;}
             int objX = coordinate[0];
             int objY = coordinate[1];
             if (touchingBlock(m,obj,objX,objY)) {
@@ -124,15 +131,15 @@ public class PhysicsEngine {
         for (int[] coordinate : getCoordinatesCovered(m)) {
             if (coordinate[0] <0 || coordinate[1] < 0) continue;
             Immovable obj = blocks[coordinate[1]][coordinate[0]];
-            if (obj == null) {
-                continue;
-            }
-            if (touchingBlock(m, obj, coordinate[0], coordinate[1])) {
+            if (obj == null || !obj.hasCollision()) continue;
+            int objX = coordinate[0];
+            int objY = coordinate[1];
+            if (touchingBlock(m, obj, objX, objY)) {
                 touched = true;
                 if (vel > 0) { // moving down
-                    m.setWorldY(coordinate[1] + obj.getPosOffsetY() - m.getSizeY());
+                    m.setWorldY(objY + obj.getPosOffsetY() - m.getSizeY());
                 } else { // moving up
-                    m.setWorldY(coordinate[1] + obj.getPosOffsetY() + obj.getSizeY());
+                    m.setWorldY(objY + obj.getPosOffsetY() + obj.getSizeY());
                 }
             }
         }
@@ -145,6 +152,24 @@ public class PhysicsEngine {
 
         return !((objTop + block.getSizeY() <= m.getWorldY()) || (objTop >= m.getWorldY() + m.getSizeY()) ||
                 (objLeft + block.getSizeX() <= m.getWorldX() || (objLeft >= m.getWorldX() + m.getSizeX())));
+    }
+
+    private boolean entityCollidesWithRect(Rect r, Physical a) {
+        Rect r_a = new Rect(a.getWorldX(),a.getWorldY(),a.getSizeX(),a.getSizeY());
+        return r.intersectRect(r_a);
+    }
+    public ArrayList<Physical> getEntitiesCollided(Rect r) {
+        ArrayList<Physical> collided = (ArrayList<Physical>) q_nm_entities.getRectIntersect(r);
+        for(Movable m : entities) {
+            if (entityCollidesWithRect(r,m)) {
+                collided.add(m);
+            }
+        }
+        return collided;
+    }
+    public ArrayList<Physical> getEntitiesCollided(float left, float top, float width, float height) {
+        Rect r = new Rect(left,top,width,height);
+        return getEntitiesCollided(r);
     }
 
 }

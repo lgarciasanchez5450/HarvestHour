@@ -5,6 +5,7 @@ import static GameEngine.GameConstants.BLOCK_SIZE;
 import java.awt.Image;
 
 import Assets.images.ImageLoader;
+import GameEngine.Entities.Entity;
 import GameEngine.Physics.Immovable;
 
 public class Block extends Entity implements Immovable {
@@ -20,8 +21,8 @@ public class Block extends Entity implements Immovable {
     public enum Types {
         TEST(1,1,"blocks/test.png");
 
-        private float width,height;
-        private String path;
+        private final float width,height;
+        private final String path;
         Types(float w, float h, String p) {
             width = w;
             height = h;
@@ -41,7 +42,7 @@ public class Block extends Entity implements Immovable {
     @Override
     public final void setVelY(float y) {}
     @Override
-    public final float getPosOffsetX() { return 00; }
+    public final float getPosOffsetX() { return 0; }
     @Override
     public final float getPosOffsetY() { return 0; }
     public String toString() {

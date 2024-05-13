@@ -14,47 +14,52 @@ import GameEngine.Player;
 
 public class Quadtree {
     class Node {
-        private Physical[] objects = new Physical[MAX_LOAD];
+        private ArrayList<Physical> objects = new ArrayList<>(maxLoad);
         private Node[] nodes; // These are ordered like from left to right , top - down [0,1,2,3]
 
         public String toString() {
-            int i = 0;
-            while (objects != null && i < 4 && objects[i] !=null ) {i++;}
+            int i = objects==null ? 0 : objects.size();
             return "Node{split:" +(nodes!=null) + ",objectCount:" + i + "}";
         }
 
     }
-    public static final int MAX_LOAD = 4;
+    public final int maxLoad;
+    public final int maxDepth;
     private Node root;
     private Rect boundary;
     public Quadtree(float minX, float minY, float width, float height) {
+        this(minX,minY,width,height,4,5);
+    }
+    public Quadtree(float minX, float minY, float width, float height, int max_load, int max_depth) {
         root = new Node();
         boundary = new Rect(minX,minY,width,height);
+        maxLoad = max_load;
+        maxDepth = max_depth;
     }
     public boolean insert(@NotNull Physical object) {
         if (!boundary.containsPoint(object.getWorldX(),object.getWorldY())) return false;
-        insert(object,root,boundary);
+        insert(object,root,boundary, 0);
         return true;
     }
-    private void insert(Physical obj, Node node, Rect nodeBoundary) {
+    private void insert(Physical obj, Node node, Rect nodeBoundary, int depth) {
         if (node.nodes != null) { // is Split
             int index = (int)(2 * (obj.getWorldY() - nodeBoundary.getY()) / nodeBoundary.getHeight()) * 2 +
                         (int)(2 * (obj.getWorldX() - nodeBoundary.getX()) / nodeBoundary.getWidth());
-            insert(obj,node.nodes[index],getSubBoundaryFromIndex(nodeBoundary,index));
+            insert(obj,node.nodes[index],getSubBoundaryFromIndex(nodeBoundary,index),depth + 1);
 
+        } else if (depth == maxDepth) {
+            node.objects.add(obj);
         } else {
-            for (int i = 0; i < node.objects.length; i++) {
-                if (node.objects[i] == null) {
-                    node.objects[i] = obj;
-                    return;
-                }
+            if (node.objects.size() != maxLoad) {
+                node.objects.add(obj);
+                return;
             }
             // It did not fit into the objects array and node must split
             node.nodes = new Node[]{new Node(), new Node(), new Node(), new Node()};
             for (Physical object : node.objects) {
-                insert(object,node,nodeBoundary);
+                insert(object,node,nodeBoundary, depth);
             }
-            insert(obj,node,nodeBoundary);
+            insert(obj,node,nodeBoundary, depth);
             node.objects = null;
         }
     }
@@ -74,7 +79,10 @@ public class Quadtree {
         } else {
             for (Physical obj : node.objects) {
                 if (obj == null) return;
-                if (rect.containsPoint(obj.getWorldX(),obj.getWorldY())) {
+                float x = obj.getWorldX();
+                float y = obj.getWorldY();
+                if (rect.containsPoint(x,y) ||
+                rect.containsPoint(x + obj.getSizeX(), y + obj.getSizeY())) {
                     t.add(obj);
                 }
             }
@@ -92,15 +100,7 @@ public class Quadtree {
                     (int) (2 * (obj.getWorldX() - nodeBoundary.getX()) / nodeBoundary.getWidth());
             return remove(obj, node.nodes[index], getSubBoundaryFromIndex(nodeBoundary, index));
         } else {
-            int i = 0;
-            while (i < MAX_LOAD && node.objects[i] != obj) {i++;}
-            if (i==MAX_LOAD) return false;
-            while (i < MAX_LOAD-1) {
-                node.objects[i] = node.objects[i+1];
-                i++;
-            }
-            node.objects[i] = null;
-            return true;
+            return node.objects.remove(obj);
         }
     }
 

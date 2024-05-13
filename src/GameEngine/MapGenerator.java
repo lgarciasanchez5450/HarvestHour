@@ -85,7 +85,7 @@ public class MapGenerator {
     public static Ground getGroundAt(int x, int y) {
         if (map == null)
             throw new RuntimeException("MapGenerator.getGroundAt() was called before MapGenerator.generate()!");
-        if (x < 0 || y < 0 || x >=map.length || y >= map[0].length) return defaultGround;
+        if (x < 0 || y < 0 || y >= map.length || x >= map[0].length) return defaultGround;
         return map[y][x];
     }
 }

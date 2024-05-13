@@ -5,4 +5,5 @@ public interface Immovable {
     float getPosOffsetY();
     float getSizeX();
     float getSizeY();
+    boolean hasCollision();
 }

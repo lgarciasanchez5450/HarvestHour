@@ -1,19 +1,24 @@
-package GameEngine;
+package GameEngine.Entities;
 
 import java.awt.Image;
 
-import GameEngine.Physics.Immovable;
+import GameEngine.Animation;
 import GameEngine.Physics.Movable;
+import GameEngine.Physics.PhysicsEngine;
 import GameEngine.Rendering.Renderable;
+import lib.Quadtree.Rect;
 
 public abstract class Entity implements Renderable, Movable {
+    public enum Type {
+        MOVABLE,
+        IMMOVABLE,
+        IMMOVABLE_GRID_BOUND
+    }
     // Basic State
     private float worldX, worldY;
     private final float sizeX,sizeY;
     private float anchorX, anchorY;
-
     private float mass;
-
     protected Animation currentAnimation;
 
     protected Entity(float x, float y, float width, float height) {
@@ -23,6 +28,8 @@ public abstract class Entity implements Renderable, Movable {
         sizeY = height;
     }
     public float getMass() {return mass;}
+
+    public boolean canSpawnOn(PhysicsEngine physicsEngine) { return true;}
 
     public final float getWorldX() { return worldX; }
     public final float getWorldY() {
@@ -37,6 +44,9 @@ public abstract class Entity implements Renderable, Movable {
     public final float getSizeY() {
         return sizeY;
     }
+    public final Rect getAsRect() {
+        return new Rect(worldX,worldY,sizeX,sizeY);
+    }
 
     public final float getAnchorX() { return anchorX; }
     public final float getAnchorY() {return anchorY; }
@@ -50,5 +60,5 @@ public abstract class Entity implements Renderable, Movable {
 
     public void update() {}
 
-
+    public boolean hasCollision() {return true;}
 }

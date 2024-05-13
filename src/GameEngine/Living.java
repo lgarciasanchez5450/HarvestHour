@@ -1,6 +1,8 @@
 package GameEngine;
 
-public abstract class Living extends Entity{
+import GameEngine.Entities.Entity;
+
+public abstract class Living extends Entity {
     protected int hp,totalHp;
     protected float velX,velY;
 
@@ -20,7 +22,7 @@ public abstract class Living extends Entity{
     }
     @Override
     public void setVelX(float x) {
-        velY = x;
+        velX = x;
     }
 
     @Override
