@@ -16,10 +16,12 @@ public class Block extends Entity implements Immovable {
         super(x, y, width, height);
         offsetX = x%1.0f;
         offsetY = y%1.0f;
-        currentAnimation = new Animation(new Image[] {ImageLoader.load(path).getScaledInstance(BLOCK_SIZE,BLOCK_SIZE,0)},1);
+        if (path != null)
+            currentAnimation = new Animation(new Image[] {ImageLoader.load(path).getScaledInstance(BLOCK_SIZE,BLOCK_SIZE,0)},1);
     }
     public enum Types {
-        TEST(1,1,"blocks/test.png");
+        TEST(1,1,"blocks/test.png"),
+        INVISIBLE(1,1,null);
 
         private final float width,height;
         private final String path;

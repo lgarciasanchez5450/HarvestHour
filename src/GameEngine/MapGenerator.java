@@ -1,5 +1,12 @@
 package GameEngine;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class MapGenerator {
     private static Ground[][] map;
     private static final Ground defaultGround = Ground.Types.WATER.getGround();
@@ -69,6 +76,10 @@ public class MapGenerator {
     }
 
     public static void generate() {
+
+
+
+
         map = new Ground[_map.length][_map[0].length];
         for (int y = 0; y < _map.length;y++) {
             for (int x = 0; x < _map[0].length;x++) {
@@ -87,5 +98,64 @@ public class MapGenerator {
             throw new RuntimeException("MapGenerator.getGroundAt() was called before MapGenerator.generate()!");
         if (x < 0 || y < 0 || y >= map.length || x >= map[0].length) return defaultGround;
         return map[y][x];
+    }
+    private static StringBuilder serializeMap(int[][] map) {
+        StringBuilder data = new StringBuilder(map[0].length * map.length + 10);
+        data.append(map[0].length)
+                .append("\n")
+                .append(map.length)
+                .append("\n");
+        for (int[] row : map) {
+            for (int d : row) {
+                data.append(d).append(",");
+            }
+            data.append("\n");
+        }
+        return data;
+    }
+    private static int[][] deserializeMap(StringBuilder data) {
+        String[] d = data.toString().split("\n");
+        int width = Integer.parseInt(d[0]);
+        int height = Integer.parseInt(d[1]);
+        int[][] map = new int[height][width];
+        for (int i = 0; i < height;i++) {
+            String[] rowData = d[i+2].split(",");
+            for (int x = 0; x < width;x++) {
+                map[i][x] = Integer.parseInt(rowData[x]);
+            }
+        }
+        return map;
+    }
+    public static void save(String name, String data) {
+        File file = new File("src/Assets/Maps/"+name+".map");
+        FileWriter fr = null;
+        try {
+            fr = new FileWriter(file);
+            fr.write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //close resources
+            if (fr != null)
+                try {
+                    fr.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
+    private static String load(String name) {
+        String content =  null;
+        try {
+            content = Files.readString(Paths.get("src/Assets/Maps/"+name+".map"));
+        } catch (Exception ignored) {
+            content = "";
+        }
+        return content;
+    }
+
+    public static void main(String[] args) {
+        save("test","Graphics Design is my Passion!");
+        System.out.println(load("test"));
     }
 }

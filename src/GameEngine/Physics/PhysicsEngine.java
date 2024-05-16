@@ -53,7 +53,8 @@ public class PhysicsEngine {
     }
     public void addMovable(Movable m) {entities.add(m);}
     public void addImmovableEntity(Physical p) {q_nm_entities.insert(p);}
-    public void removeMovable(Movable m) {entities.remove(m);}
+    public boolean removeImmovableEntity(Physical p) { return q_nm_entities.remove(p);}
+    public boolean removeMovable(Movable m) {return entities.remove(m);}
     /**
      * Attempts to add an immovable block to the world
      * @param im Block Object, must implement Immovable interface

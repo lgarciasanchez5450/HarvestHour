@@ -1,28 +1,13 @@
-
-import org.w3c.dom.css.Rect;
+package Applications;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Panel;
-import java.awt.Rectangle;
-import java.awt.image.ImageObserver;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.border.Border;
 
 import Assets.images.ImageLoader;
 
 import lib.Button;
 import lib.ImagePanel;
 import lib.Label;
-
-import Assets.fonts.FontLoader;
 
 public class Launcher extends Application{
     public boolean readyToLaunchGame;
@@ -32,7 +17,7 @@ public class Launcher extends Application{
     private ImagePanel background;
     private Button quitButton;
     Launcher() {
-        super("Harvest Hour Launcher",900,600);
+        super("Harvest Hour Applications.Launcher",900,600);
         titleFont = new Font("Roboto",Font.BOLD,50);
 
         screen.setIconImage(ImageLoader.load("CUELLAR.jpg"));

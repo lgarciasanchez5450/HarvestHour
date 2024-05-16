@@ -80,7 +80,7 @@ public class Renderer {
 
     private void drawRenderable(Graphics2D g,Renderable renderable) {
         Image image = renderable.getCurrentFrame();
-
+        if (image == null) return;
         renderImage(g,image,renderable.getWorldX(),renderable.getWorldY(),
                             renderable.getSizeX(),renderable.getSizeY(),
                             renderable.getAnchorX(), renderable.getAnchorY());

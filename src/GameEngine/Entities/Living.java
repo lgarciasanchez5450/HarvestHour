@@ -1,6 +1,5 @@
-package GameEngine;
+package GameEngine.Entities;
 
-import GameEngine.Entities.Entity;
 
 public abstract class Living extends Entity {
     protected int hp,totalHp;

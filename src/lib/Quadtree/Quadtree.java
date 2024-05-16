@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import GameEngine.Physics.Physical;
-import GameEngine.Player;
+import GameEngine.Entities.Player;
 
 /**
  * Java Quadtree Implementation made by LEOGS :)
@@ -90,7 +90,7 @@ public class Quadtree {
 
     }
 
-    private boolean remove(Physical obj) {
+    public boolean remove(Physical obj) {
         if (!boundary.containsPoint(obj.getWorldX(),obj.getWorldY())) return false;
         return remove(obj,root,boundary);
     }

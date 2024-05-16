@@ -1,8 +1,9 @@
-package GameEngine;
+package GameEngine.Entities;
 
 import java.awt.event.KeyEvent;
 
 import Assets.images.ImageLoader;
+import GameEngine.Animation;
 import lib.KeyInput;
 
 public class Player extends Living {

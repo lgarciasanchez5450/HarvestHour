@@ -1,4 +1,4 @@
-
+package Applications;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -39,7 +39,7 @@ public abstract class Application extends JPanel implements Runnable {
 
         screen = new JFrame(caption);
         screen.setSize(width,height);
-        screen.setLocation((displayResolution.width-width)/2,(displayResolution.height-height)/2); // Puts the Window in the middle of the page.
+        screen.setLocation((displayResolution.width-width)/2,(displayResolution.height-height)/2); // Puts the Applications.Window in the middle of the page.
         screen.setPreferredSize(new Dimension(width,height));
         screen.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
