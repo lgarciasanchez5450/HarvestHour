@@ -1,8 +1,6 @@
 package GameEngine.Rendering;
 
 import static GameEngine.GameConstants.BLOCK_SIZE;
-import static GameEngine.GameConstants.WINDOW_HEIGHT_GAME_COORDS;
-import static GameEngine.GameConstants.WINDOW_WIDTH_GAME_COORDS;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -37,7 +35,7 @@ public class Renderer {
     public void removeRenderable(Renderable r) {
         toRender.add(r);
     }
-
+    public Camera getCamera() { return camera; }
     public void update() {
         camera.update();
     }
@@ -57,6 +55,8 @@ public class Renderer {
     }
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        final float WINDOW_HEIGHT_GAME_COORDS = (float) halfWindowHeight*2 / BLOCK_SIZE;
+        final float WINDOW_WIDTH_GAME_COORDS = (float) halfWindowWidth*2 / BLOCK_SIZE;
         // Protocol
         // 1) Draw Ground
         // 2) Draw Sprites

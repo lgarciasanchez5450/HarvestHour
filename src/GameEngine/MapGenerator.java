@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 public class MapGenerator {
     private static Ground[][] map;
     private static final Ground defaultGround = Ground.Types.WATER.getGround();
-    private static final int[][] _map = {
+    private static int[][] _map = {
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0},
@@ -74,16 +74,33 @@ public class MapGenerator {
             default -> null;
         };
     }
+    private static int groundToInt(Ground.Types g) {
+        return switch (g) {
+            case WATER -> 0;
+            case GRASS -> 1;
+            case SAND -> 2;
+            case PLANK -> 3;
+            case PLANK_WATER1 -> 4;
+            case PLANK_WATER2 -> 5;
+            case TILLED_DIRT -> 6;
+        };
+    }
 
     public static void generate() {
-
-
-
-
-        map = new Ground[_map.length][_map[0].length];
-        for (int y = 0; y < _map.length;y++) {
-            for (int x = 0; x < _map[0].length;x++) {
-                map[y][x] = intToGround(_map[y][x]);
+        int[][] m = _map;
+        map = new Ground[m.length][m[0].length];
+        for (int y = 0; y < m.length;y++) {
+            for (int x = 0; x < m[0].length;x++) {
+                map[y][x] = intToGround(m[y][x]);
+            }
+        }
+    }
+    public static void degenerate() {
+        Ground[][] m = map;
+        _map = new int[m.length][m[0].length];
+        for (int y = 0; y < m.length;y++) {
+            for (int x = 0; x < m[0].length;x++) {
+                _map[y][x] = groundToInt(m[y][x].getType());
             }
         }
     }
@@ -126,7 +143,7 @@ public class MapGenerator {
         }
         return map;
     }
-    public static void save(String name, String data) {
+    private static void save(String name, String data) {
         File file = new File("src/Assets/Maps/"+name+".map");
         FileWriter fr = null;
         try {
@@ -145,7 +162,7 @@ public class MapGenerator {
         }
     }
     private static String load(String name) {
-        String content =  null;
+        String content;
         try {
             content = Files.readString(Paths.get("src/Assets/Maps/"+name+".map"));
         } catch (Exception ignored) {
@@ -154,8 +171,21 @@ public class MapGenerator {
         return content;
     }
 
-    public static void main(String[] args) {
-        save("test","Graphics Design is my Passion!");
-        System.out.println(load("test"));
+    public static void loadMap(String name) {
+        _map = deserializeMap(new StringBuilder(load(name)));
+        generate();
     }
+    public static void saveMap(String name) {
+        degenerate();
+        save(name,serializeMap(_map).toString());
+    }
+    public static void setGroundAt(int x, int y, Ground g) {
+        if (x < 0 || y < 0 || y >= map.length || x >= map[0].length) return;
+        map[y][x] = g;
+    }
+    //public static void main(String[] args) {
+    //    generate();
+    //    saveMap("main");
+    //}
+
 }

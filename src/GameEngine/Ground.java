@@ -6,6 +6,7 @@ import Assets.images.ImageLoader;
 import GameEngine.Physics.PhysicalGround;
 
 public class Ground implements PhysicalGround {
+
     final float frictionK;
     final Animation animation;
     public Ground(float frictionCoefficient,String pathToAnim) {
@@ -22,7 +23,16 @@ public class Ground implements PhysicalGround {
     public float getFrictionCoefficient() {
         return frictionK;
     }
-
+    public Types getType(){
+        if (Types.WATER.getGround() == this) { return Types.WATER; }
+        else if (Types.GRASS.getGround() == this) { return Types.GRASS; }
+        else if (Types.SAND.getGround() == this) { return Types.SAND; }
+        else if (Types.PLANK.getGround() == this) { return Types.PLANK; }
+        else if (Types.PLANK_WATER1.getGround() == this) { return Types.PLANK_WATER1; }
+        else if (Types.PLANK_WATER2.getGround() == this) { return Types.PLANK_WATER2; }
+        else if (Types.TILLED_DIRT.getGround() == this) { return Types.TILLED_DIRT; }
+        return Types.WATER;
+    }
     public enum Types {
         WATER(new Ground(1,"src/Assets/images/ground/water")),
         GRASS(new Ground(5,"src/Assets/images/ground/grass")),

@@ -9,6 +9,9 @@ public class Camera {
         camX = target.getWorldX();
         camY = target.getWorldY();
     }
+    public void setTarget(HasPosition t) {
+        target = t;
+    }
     public void update() {
         camX = target.getWorldX();
         camY = target.getWorldY();

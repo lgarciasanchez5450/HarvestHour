@@ -67,7 +67,6 @@ public abstract class Application extends JPanel implements Runnable {
     public void run() {
         running = true;
         Clock clock = new Clock();
-
         init();
         screen.setVisible(true);
 

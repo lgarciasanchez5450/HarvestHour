@@ -3,6 +3,7 @@ package Applications;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
@@ -93,7 +94,15 @@ public class GameApp extends JPanel implements Runnable {
         init();
         while (gameThread != null) {
             mouseInput.update();
-            mouseInput.mousePosition = getMousePosition();
+            Point mpos = getMousePosition();
+            if (mpos != null) {
+                mouseInput.mousePositionDelta.x = mpos.x - mouseInput.mousePosition.x;
+                mouseInput.mousePositionDelta.y = mpos.y - mouseInput.mousePosition.y;
+                mouseInput.mousePosition = mpos;
+            } else {
+                mouseInput.mousePositionDelta.x = 0;
+                mouseInput.mousePositionDelta.y = 0;
+            }
             update();
             Animation.updateAll();
             repaint();
