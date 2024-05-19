@@ -10,25 +10,32 @@ import lib.Quadtree.Rect;
 import Applications.GameApp;
 
 public abstract class Entity implements Renderable, Movable {
+    private final String tag;
     public enum Type {
         MOVABLE,
         IMMOVABLE,
         IMMOVABLE_GRID_BOUND
     }
     // Basic State
+    private int layer;
     private float worldX, worldY;
     private final float sizeX,sizeY;
     private float anchorX, anchorY;
     private float mass;
     protected Animation currentAnimation;
-    private boolean shouldDespawn;
+    protected boolean shouldDespawn;
 
-    protected Entity(float x, float y, float width, float height) {
+    protected Entity(String tag, float x, float y, float width, float height,int layer) {
         worldX = x;
         worldY = y;
         sizeX = width;
         sizeY = height;
         shouldDespawn = false;
+        this.layer = layer;
+        this.tag = tag;
+    }
+    protected Entity(String tag, float x, float y, float width, float height) {
+        this(tag, x,y,width,height,1);
     }
     public float getMass() {return mass;}
 
@@ -71,4 +78,5 @@ public abstract class Entity implements Renderable, Movable {
     public boolean hasCollision() {return true;}
 
     public void onDespawn(GameApp game) {}
+    public String getTag() {return tag;}
 }

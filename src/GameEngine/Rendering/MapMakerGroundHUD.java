@@ -4,19 +4,16 @@ import static GameEngine.GameConstants.BLOCK_SIZE;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.security.Key;
-import java.util.ArrayList;
+
 import java.util.HashSet;
 
+import javax.swing.JOptionPane;
+
 import Assets.images.ImageLoader;
-import GameEngine.Block;
 import GameEngine.Ground;
 import GameEngine.MapGenerator;
-import lib.KeyInput;
 import lib.MouseInput;
 
 public class MapMakerGroundHUD {
@@ -65,7 +62,14 @@ public class MapMakerGroundHUD {
                 activeIndex = index;
             } else {
                 if (saveIndexes.contains(index)) {
-                    MapGenerator.saveMap("main");
+                    String name = JOptionPane.showInputDialog("Save As:",MapGenerator.getCurrentMapName());
+                    if (name != null)
+                        if(name.length() == 0) {
+                            MapGenerator.saveMap();
+                        } else {
+                            MapGenerator.saveMap(name);
+                        }
+                    mouseInput.reset();
                 }
             }
         }

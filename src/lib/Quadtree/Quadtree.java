@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import GameEngine.Physics.Physical;
-import GameEngine.Entities.Player;
 
 /**
  * Java Quadtree Implementation made by LEOGS :)
@@ -130,19 +129,7 @@ public class Quadtree {
         return nodeString;
     }
 
-    public static void main(String[] args) {
-        Quadtree tree = new Quadtree(0,0,100,100);
-        Player p =  new Player(1,1);
-        tree.insert(p);
-        tree.insert( new Player(1,2));
-        tree.insert( new Player(1,4));
-        tree.insert( new Player(1,6));
-        tree.insert( new Player(1,3));
-        System.out.println(tree);
-        tree.remove(p);
-        System.out.println(tree);
 
-    }
 }
 
 

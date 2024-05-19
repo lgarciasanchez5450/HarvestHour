@@ -12,26 +12,28 @@ public class Block extends Entity implements Immovable {
     private final float offsetX;
     private final float offsetY;
 
-    protected Block(float x, float y, float width, float height, String path) {
-        super(x, y, width, height);
+    protected Block(String tag,float x, float y, float width, float height, String path) {
+        super(tag, x, y, width, height);
         offsetX = x%1.0f;
         offsetY = y%1.0f;
         if (path != null)
             currentAnimation = new Animation(new Image[] {ImageLoader.load(path).getScaledInstance(BLOCK_SIZE,BLOCK_SIZE,0)},1);
     }
     public enum Types {
-        TEST(1,1,"blocks/test.png"),
-        INVISIBLE(1,1,null);
+        TEST(1,1,"","blocks/test.png"),
+        INVISIBLE(1,1,"Invisible",null);
 
         private final float width,height;
+        private final String tag;
         private final String path;
-        Types(float w, float h, String p) {
+        Types(float w, float h, String tag,String p) {
             width = w;
             height = h;
             path = p;
+            this.tag = tag;
         }
         public Block makeBlock(float x, float y) {
-            return new Block(x,y,width,height,path);
+            return new Block(tag, x,y,width,height,path);
         }
     }
 

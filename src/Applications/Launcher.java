@@ -20,7 +20,7 @@ public class Launcher extends Application{
     private ImagePanel background;
     private Button quitButton;
     private Button mapMakerButton;
-    Launcher() {
+    public Launcher() {
         super("Harvest Hour Applications.Launcher",900,600);
         titleFont = new Font("Roboto",Font.BOLD,50);
 

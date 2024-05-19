@@ -7,8 +7,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import javax.swing.JOptionPane;
+
+import lib.StringUtils;
+
 public class MapGenerator {
     private static Ground[][] map;
+    private static String currentMap;
     private static final Ground defaultGround = Ground.Types.WATER.getGround();
     private static int[][] _map = {
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -62,6 +67,10 @@ public class MapGenerator {
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     };
+    public static String getCurrentMapName() {
+        if (currentMap == null) return "main";
+        return currentMap;
+    }
     private static Ground intToGround(int x) {
         return switch (x) {
             case 0 -> Ground.Types.WATER.getGround();
@@ -172,8 +181,23 @@ public class MapGenerator {
     }
 
     public static void loadMap(String name) {
-        _map = deserializeMap(new StringBuilder(load(name)));
+        String data = load(name);
+        try {
+            _map = deserializeMap(new StringBuilder(data));
+        } catch (Exception ignored) {
+            JOptionPane.showConfirmDialog(null,"That File does not store a map. Making a new Map.","Info",JOptionPane.YES_OPTION);
+            String w = JOptionPane.showInputDialog("New Map Width:","50");
+            String h = JOptionPane.showInputDialog("New Map Height:","50");
+            int sizeX = StringUtils.parseInt(w,50);
+            int sizeY = StringUtils.parseInt(h,50);
+            JOptionPane.showConfirmDialog(null,"New Map of size ("+sizeX+", "+sizeY+").","New Map Created",JOptionPane.YES_OPTION);
+            _map = new int[sizeY][sizeX];
+        }
         generate();
+        currentMap = name;
+    }
+    public static void saveMap() {
+        saveMap(currentMap);
     }
     public static void saveMap(String name) {
         degenerate();

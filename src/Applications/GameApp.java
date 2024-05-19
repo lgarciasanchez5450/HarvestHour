@@ -4,28 +4,39 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import GameEngine.Animation;
 import GameEngine.Block;
 import GameEngine.Entities.Entity;
 import GameEngine.Entities.LoanShark;
-import GameEngine.Entities.Weet;
+import GameEngine.Entities.Seed;
 import GameEngine.MapGenerator;
-import GameEngine.Physics.Movable;
 import GameEngine.Physics.PhysicsEngine;
 import GameEngine.Entities.Player;
 import GameEngine.Rendering.Cameras.ConvergeCamera;
 import GameEngine.Rendering.Renderer;
 import lib.Clock;
+import lib.KeyInput;
+import lib.Label;
 import lib.MouseInput;
 import lib.Time;
 
 public class GameApp extends JPanel implements Runnable {
     protected Thread gameThread;
     protected ArrayList<Entity> entities = new ArrayList<>();
+    protected HashSet<Entity> toDespawn = new HashSet<>();
+
     protected PhysicsEngine physics;
+    private int weetInPlayer;
+    private int seedsInPlayer;
+    private Label weetLabel;
+    private Label seedLabel;
     protected Player player;
     protected Renderer renderer;
     protected MouseInput mouseInput;
@@ -33,21 +44,24 @@ public class GameApp extends JPanel implements Runnable {
     public void setMouseInput(MouseInput mi) {
         mouseInput = mi;
     }
-    GameApp() {
+
+    public GameApp() {
         this.setPreferredSize(new Dimension(900,600));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
-        // Setup Game
+        player = new Player(14,14,this);
+        player.speed = 5;
+        renderer = new Renderer(new ConvergeCamera(player,10),3);
         MapGenerator.generate();
         physics = new PhysicsEngine(MapGenerator.getMap());
-        player = new Player(14,14);
-        player.speed = 5;
 
-        //Setup Render Stuffs
-        renderer = new Renderer(new ConvergeCamera(player,10));
+
+        // Setup Game
     }
-    private void manageEntities() {
-        ArrayList<Entity> toDespawn = new ArrayList<>();
+    public void killEntity(Entity e) {
+        toDespawn.add(e);
+    }
+    private void manageEntities(ArrayList<Entity> entities) {
         for (Entity entity : entities) {
             if (entity.getShouldDespawn()) {
                 toDespawn.add(entity);
@@ -61,13 +75,13 @@ public class GameApp extends JPanel implements Runnable {
             }
             toKill.onDespawn(this);
         }
+        toDespawn.clear();
     }
-
-    private boolean spawnEntity(Entity entity, Entity.Type type) {
+    public boolean spawnEntity(Entity entity, int layer,Entity.Type type) {
         if (!entity.canSpawnOn(physics)) return false;
         entity.startAnimation();
         entities.add(entity);
-        renderer.addRenderable(entity);
+        renderer.addRenderable(entity,layer);
         switch (type) {
             case MOVABLE -> physics.addMovable(entity);
             case IMMOVABLE -> physics.addImmovableEntity(entity);
@@ -78,8 +92,6 @@ public class GameApp extends JPanel implements Runnable {
         }
         return true;
     }
-
-
     public void startThread() {
         gameThread = new Thread(this);
         gameThread.start();
@@ -93,6 +105,7 @@ public class GameApp extends JPanel implements Runnable {
 
         init();
         while (gameThread != null) {
+
             mouseInput.update();
             Point mpos = getMousePosition();
             if (mpos != null) {
@@ -104,6 +117,9 @@ public class GameApp extends JPanel implements Runnable {
                 mouseInput.mousePositionDelta.y = 0;
             }
             update();
+            manageEntities(entities);
+            KeyInput.reset();
+
             Animation.updateAll();
             repaint();
             Time.deltaTime = clock.tick(Application.FPS);
@@ -114,11 +130,11 @@ public class GameApp extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         renderer.paint(g);
-    }
 
+    }
     public void init() {
-        spawnEntity(player, Entity.Type.MOVABLE);
-        spawnEntity(Block.Types.TEST.makeBlock(10,10), Entity.Type.IMMOVABLE_GRID_BOUND);
+        spawnEntity(player, 1, Entity.Type.MOVABLE);
+        spawnEntity(Block.Types.TEST.makeBlock(10,10), 1,Entity.Type.IMMOVABLE_GRID_BOUND);
         renderer.setHalfWindowWidth(getWidth()/2);
         renderer.setHalfWindowHeight(getHeight()/2);
 
@@ -127,23 +143,28 @@ public class GameApp extends JPanel implements Runnable {
         // Spawn LoanShark
         LoanShark ls = new LoanShark(15,40);
 
-        spawnEntity(ls,Entity.Type.MOVABLE);
-        spawnEntity(Block.Types.INVISIBLE.makeBlock(15,40),Entity.Type.IMMOVABLE_GRID_BOUND);
+        spawnEntity(ls,1,Entity.Type.MOVABLE);
+        spawnEntity(Block.Types.INVISIBLE.makeBlock(15,40),1,Entity.Type.IMMOVABLE_GRID_BOUND);
     }
     public void update() {
         for (Entity e : entities) {
             e.update();
         }
-        if (mouseInput.mouseButtonsClicked[0]) {
-            System.out.println(spawnEntity(new Weet((int)renderer.getWorldXFromScreenX(mouseInput.mousePosition.x),(int)renderer.getWorldYFromScreenY(mouseInput.mousePosition.y))
-            ,Entity.Type.IMMOVABLE));
+        if (seedsInPlayer > 0 && mouseInput.mouseButtonsClicked[0]) {
+            spawnEntity(new Seed((int)renderer.getWorldXFromScreenX(mouseInput.mousePosition.x),(int)renderer.getWorldYFromScreenY(mouseInput.mousePosition.y)),
+            0,Entity.Type.IMMOVABLE);
+            seedsInPlayer--;
         }
         if (mouseInput.mouseButtonsClicked[2]) {
             System.out.println(renderer.getNumRenderables());
+        }
+        if (KeyInput.getKey(KeyEvent.VK_DOWN)) {
+            player.beginHarvesting();
         }
         physics.update();
         renderer.update();
 
     }
+    public PhysicsEngine getPhysics() {return physics;}
 
 }

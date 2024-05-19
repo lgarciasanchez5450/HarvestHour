@@ -19,6 +19,7 @@ public class Window extends JFrame {
         addKeyListener(keyInput);
         addMouseListener(mouseInput);
         addMouseWheelListener(mouseInput);
+
     }
 
     public Component add(Component comp) {

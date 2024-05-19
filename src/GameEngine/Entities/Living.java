@@ -5,8 +5,8 @@ public abstract class Living extends Entity {
     protected int hp,totalHp;
     protected float velX,velY;
 
-    protected Living(float x, float y,float width, float height) {
-        super(x, y, width, height);
+    protected Living(String tag,float x, float y,float width, float height) {
+        super(tag,x, y, width, height);
     }
 
     public boolean isAlive() {return hp > 0; }

@@ -14,14 +14,17 @@ import GameEngine.Physics.PhysicsEngine;
 import GameEngine.Rendering.Cameras.Camera;
 
 public class Renderer {
-    private final ArrayList<Renderable> toRender = new ArrayList<>();
+    private final ArrayList<ArrayList<Renderable>> layers = new ArrayList<>(4);
     private int halfWindowWidth,halfWindowHeight;
     private final Camera camera;
+    private final int defaultLayer;
     private final EntitySorter entitySorter = new EntitySorter();
 
-
-    public Renderer(Camera cam) {
+    public Renderer(Camera cam, int numberOfLayers) {
+        defaultLayer = numberOfLayers/2;
         camera = cam;
+        for (int i = 0; i < numberOfLayers; i++)
+            layers.add(new ArrayList<>());
     }
     public void setHalfWindowWidth(int halfWidth) {
         halfWindowWidth = halfWidth;
@@ -30,16 +33,35 @@ public class Renderer {
         halfWindowHeight = halfHeight;
     }
     public void addRenderable(Renderable r) {
-        toRender.add(r);
+        addRenderable(r,defaultLayer);
     }
-    public void removeRenderable(Renderable r) {
-        toRender.add(r);
+    public boolean removeRenderable(Renderable r) {
+        if (!removeRenderable(r,defaultLayer)) {
+            for (int i = 0; i < layers.size();i++) {
+                if (i==defaultLayer) continue;
+                if (removeRenderable(r,i)) return true;
+            }
+        } else {
+            return true;
+        }
+        return false;
+    }
+    public void addRenderable(Renderable r,int layer) {
+        layers.get(layer).add(r);
+    }
+    public boolean removeRenderable(Renderable r, int layer) {
+        return layers.get(layer).remove(r);
     }
     public Camera getCamera() { return camera; }
     public void update() {
         camera.update();
     }
-    public int getNumRenderables() {return toRender.size();}
+    public int getNumRenderables() {
+        int i = 0;
+        for(ArrayList<Renderable> layer :layers)
+            i += layer.size();
+        return i;
+    }
 
     public final float getWorldXFromScreenX(float x) {
         return (x - halfWindowWidth) / BLOCK_SIZE + camera.getCameraX();
@@ -66,11 +88,21 @@ public class Renderer {
         for (int[] coord : PhysicsEngine.getCoordinatesCovered(left,top,left+WINDOW_WIDTH_GAME_COORDS,top + WINDOW_HEIGHT_GAME_COORDS)) {
             drawGround(g2, MapGenerator.getGroundAt(coord[0],coord[1]),coord[0],coord[1]);
         }
+        for (ArrayList<Renderable> layer : layers ) {
+            layer.sort(entitySorter);
+            try {
+                for (Renderable obj : layer) {
+                    drawRenderable(g2,obj);
+                }
+            }
+            catch (Exception e) {
+                System.out.println(e);
 
-        toRender.sort(entitySorter);
-        for (Renderable obj : toRender) {
-            drawRenderable(g2,obj);
+            }
         }
+
+
+
     }
     private void drawGround(Graphics2D g, Ground ground,int x, int y) {
         int pixelCoordX = (int) Math.floor((x - camera.getCameraX()) * BLOCK_SIZE);
@@ -81,9 +113,12 @@ public class Renderer {
     private void drawRenderable(Graphics2D g,Renderable renderable) {
         Image image = renderable.getCurrentFrame();
         if (image == null) return;
+
         renderImage(g,image,renderable.getWorldX(),renderable.getWorldY(),
                             renderable.getSizeX(),renderable.getSizeY(),
                             renderable.getAnchorX(), renderable.getAnchorY());
+
+
     }
     private void renderImage(Graphics2D g, Image img, float worldX, float worldY, float worldSizeX, float worldSizeY, float anchorX, float anchorY) {
         int pixelCoordX = (int) Math.floor((worldX - camera.getCameraX()) * BLOCK_SIZE);
@@ -96,7 +131,7 @@ public class Renderer {
     public static class EntitySorter implements Comparator<Renderable> {
         @Override
         public int compare(Renderable r1, Renderable r2) {
-            return (int)(2*(r1.getWorldY() - r2.getWorldY()));
+            return (int) Math.copySign(1,(r1.getWorldY() - r2.getWorldY()));
         }
     }
 

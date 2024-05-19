@@ -41,4 +41,10 @@ public class MouseInput implements MouseListener, MouseWheelListener {
     public void mouseWheelMoved(MouseWheelEvent e) {
         wheel = e.getScrollAmount();
     }
+    public void reset() {
+        mb[0] = false;
+        mb[1] = false;
+        mb[2] = false;
+
+    }
 }
