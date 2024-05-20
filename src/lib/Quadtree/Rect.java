@@ -1,7 +1,7 @@
 package lib.Quadtree;
 
 public class Rect {
-    private float x,y,width,height;
+    private final float x,y,width,height;
 
     public Rect(float x,float y,float w,float h) {
         this.x = x;
@@ -22,21 +22,10 @@ public class Rect {
         return (widthIsPositive && heightIsPositive);
 
     }
-    public static boolean rectangleOverlap(float x1,
-                                      float x2,
-                                      float x3,
-                                      float x4,
-                                      float y1,
-                                      float y2,
-                                      float y3,
-                                      float y4
-                                      ) {
-        boolean widthIsPositive  = Math.min(x3, y3) > Math.max(x1, y1);
-        boolean heightIsPositive = Math.min(x4, y4) > Math.max(x2, y2);
-        return (widthIsPositive && heightIsPositive);
+
+    public Rect inflate(float dx, float dy) {
+        return new Rect(x-dx/2,y-dy/2,width+dx,height+dy);
     }
-    public boolean equals(Rect other) {
-        if (other == this) return true;
-        return other.x ==x && other.y == y && other.width == width && other.height == height;
-    }
+
+
 }

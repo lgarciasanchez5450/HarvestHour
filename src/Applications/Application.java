@@ -19,7 +19,7 @@ import lib.KeyInput;
 import lib.MouseInput;
 
 public abstract class Application extends JPanel implements Runnable {
-    public static final int FPS = 60;
+    public static final int FPS = 70;
     protected JFrame screen;
     private boolean running;
 
@@ -58,9 +58,7 @@ public abstract class Application extends JPanel implements Runnable {
         screen.addMouseListener(mouseInput);
 
     }
-    public boolean isRunning() {
-        return running;
-    }
+
     public void quit() {
         running = false;
     }
@@ -80,7 +78,7 @@ public abstract class Application extends JPanel implements Runnable {
     }
     protected abstract void init();
 
-    protected abstract void loop();
+    protected void loop() {}
 
     protected abstract void onQuit();
 

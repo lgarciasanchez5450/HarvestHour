@@ -10,6 +10,7 @@ import lib.Quadtree.Rect;
 import Applications.GameApp;
 
 public abstract class Entity implements Renderable, Movable {
+    public boolean dead;
     private final String tag;
     public enum Type {
         MOVABLE,
@@ -17,27 +18,20 @@ public abstract class Entity implements Renderable, Movable {
         IMMOVABLE_GRID_BOUND
     }
     // Basic State
-    private int layer;
     private float worldX, worldY;
     private final float sizeX,sizeY;
     private float anchorX, anchorY;
-    private float mass;
     protected Animation currentAnimation;
     protected boolean shouldDespawn;
 
-    protected Entity(String tag, float x, float y, float width, float height,int layer) {
+    protected Entity(String tag, float x, float y, float width, float height) {
         worldX = x;
         worldY = y;
         sizeX = width;
         sizeY = height;
         shouldDespawn = false;
-        this.layer = layer;
         this.tag = tag;
     }
-    protected Entity(String tag, float x, float y, float width, float height) {
-        this(tag, x,y,width,height,1);
-    }
-    public float getMass() {return mass;}
 
     public boolean canSpawnOn(PhysicsEngine physicsEngine) { return true;}
     public boolean getShouldDespawn() {return shouldDespawn;}
@@ -61,8 +55,8 @@ public abstract class Entity implements Renderable, Movable {
     public final float getAnchorX() { return anchorX; }
     public final float getAnchorY() {return anchorY; }
 
-    public final float setAnchorX(float anchorX) { return this.anchorX = anchorX;}
-    public final float setAnchorY(float anchorY) {return this.anchorY = anchorY; }
+    public final void setAnchorX(float anchorX) { this.anchorX = anchorX;}
+    public final void setAnchorY(float anchorY) { this.anchorY = anchorY; }
 
     public Image getCurrentFrame() {
         if (currentAnimation == null) return null;

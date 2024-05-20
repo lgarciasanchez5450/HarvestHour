@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+import Applications.GameApp;
 import GameEngine.Ground;
 import lib.Quadtree.Quadtree;
 import lib.Quadtree.Rect;
@@ -42,7 +43,7 @@ public class PhysicsEngine {
     }
 
     public void update() {
-        final float dt = (float) Time.deltaTime;
+        final float dt = (float) Time.deltaTime * GameApp.timeMultiplier;
         for (Movable m : entities) {
             //System.out.println(m.getWorldX() + ";"+m.getWorldY());
             m.setWorldX(m.getWorldX() + m.getVelX() * dt);

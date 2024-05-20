@@ -27,7 +27,7 @@ public class Animation {
 
     public static void updateAll() {
         for (Animation anim : animationsOn) {
-            if (anim.fps != 0) {
+            if (anim.fps != 0 && anim.frames.length != 0) {
                 anim.timePassed += Time.deltaTime * anim.fps;
                 int newFrame = (int) anim.timePassed % anim.frames.length;
                 anim.finishedCycle = (newFrame != anim.frame && newFrame == 0);
@@ -37,7 +37,6 @@ public class Animation {
 
     }
     public void nextFrame() {
-
         frame= frames.length==0 ? -1 : (frame+1) %frames.length;
         if (frame == 0) {
             finishedCycle = true;
@@ -55,15 +54,9 @@ public class Animation {
         animationsOn.add(this);
         active = true;
     }
-    public void stop() {
-        if (!active) return;
-        animationsOn.remove(this);
-        active = false;
-    }
 
 
     public Image getCurrentFrame() {
-        if (frame==-1) return null;
         return frames[frame];
     }
 }

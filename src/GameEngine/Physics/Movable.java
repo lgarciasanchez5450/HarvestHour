@@ -10,6 +10,5 @@ public interface Movable extends Physical { // Things that can be put into the P
 
     void setVelX(float x);
     void setVelY(float y);
-    float getMass();
 
 }

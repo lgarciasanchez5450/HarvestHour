@@ -185,12 +185,12 @@ public class MapGenerator {
         try {
             _map = deserializeMap(new StringBuilder(data));
         } catch (Exception ignored) {
-            JOptionPane.showConfirmDialog(null,"That File does not store a map. Making a new Map.","Info",JOptionPane.YES_OPTION);
+            JOptionPane.showConfirmDialog(null,"That File does not store a map. Making a new Map.","Info",JOptionPane.OK_CANCEL_OPTION);
             String w = JOptionPane.showInputDialog("New Map Width:","50");
             String h = JOptionPane.showInputDialog("New Map Height:","50");
             int sizeX = StringUtils.parseInt(w,50);
             int sizeY = StringUtils.parseInt(h,50);
-            JOptionPane.showConfirmDialog(null,"New Map of size ("+sizeX+", "+sizeY+").","New Map Created",JOptionPane.YES_OPTION);
+            JOptionPane.showConfirmDialog(null,"New Map of size ("+sizeX+", "+sizeY+").","New Map Created",JOptionPane.OK_CANCEL_OPTION);
             _map = new int[sizeY][sizeX];
         }
         generate();

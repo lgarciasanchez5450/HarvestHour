@@ -5,6 +5,7 @@ import static GameEngine.GameConstants.weetTag;
 
 import java.util.ArrayList;
 
+import Applications.GameApp;
 import Assets.images.ImageLoader;
 import GameEngine.Animation;
 import GameEngine.Ground;
@@ -13,7 +14,7 @@ import GameEngine.Physics.PhysicsEngine;
 
 public class Weet extends Entity{
     public Weet(int x, int y) {
-        super(weetTag,x, y, 1, 1,1);
+        super(weetTag,x, y, 1, 1);
         currentAnimation = new Animation(ImageLoader.loadFolder("src/Assets/images/blocks/wheet",BLOCK_SIZE,BLOCK_SIZE+BLOCK_SIZE/2),1);
         setAnchorX(0.5f);
         setAnchorY(1);
@@ -28,7 +29,10 @@ public class Weet extends Entity{
         }
         return ground == Ground.Types.TILLED_DIRT.getGround() ;
     }
-
+    public void onDespawn(GameApp game) {
+        game.playerCollectWeet(2);
+        game.playerCollectSeed((int)(Math.random()*2)+1);
+    }
     @Override
     public float getVelX() {return 0;}
     @Override
@@ -37,4 +41,5 @@ public class Weet extends Entity{
     public void setVelX(float x) {}
     @Override
     public void setVelY(float y) {}
+
 }

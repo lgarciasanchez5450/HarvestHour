@@ -14,12 +14,12 @@ public class Launcher extends Application{
         NONE,GAME,MAP_MAKER
     }
     public ReadyToLaunch toLaunch = ReadyToLaunch.NONE;
-    private Button startButton;
-    private Label gameTitle;
-    private Font titleFont;
-    private ImagePanel background;
-    private Button quitButton;
-    private Button mapMakerButton;
+    private final Button startButton;
+    private final Label gameTitle;
+    private final Font titleFont;
+    private final ImagePanel background;
+    private final Button quitButton;
+    private final Button mapMakerButton;
     public Launcher() {
         super("Harvest Hour Applications.Launcher",900,600);
         titleFont = new Font("Roboto",Font.BOLD,50);
@@ -79,14 +79,7 @@ public class Launcher extends Application{
     protected void init() {
     }
 
-    @Override
-    protected void loop() {
 
-
-        //System.out.print(startButton.getX());
-        //System.out.println(", " + startButton.getY());
-        //background.paint(graphics);
-    }
 
     @Override
     protected void onQuit() {
